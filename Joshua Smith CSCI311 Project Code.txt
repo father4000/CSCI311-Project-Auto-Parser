@@ -1,0 +1,155 @@
+/*
+Program Name: Rule Based AI Parser
+Author: Joshua Smith
+Date: 3/30/26
+Purpose: Takes a selection of 20 sentences the user can pick from and breaks
+them down into components such as verb and noun using grammer rules. Showen as 
+a parse tree.
+
+Note: For use with https://www.onlinegdb.com/online_prolog_compiler
+I had different behavior from different compilers. Some would not compile at all.
+
+*/
+
+:- initialization(main).
+
+
+
+
+% Sentences
+% Formated to make life easier. Number 20 is purposly invalid.
+
+sentenceDB(1,  [the, josh, sees, a, mouse]).
+sentenceDB(2,  [josh, dislikes, the, mouse]).
+sentenceDB(3,  [josh, chases, the, mouse]).
+sentenceDB(4,  [josh, sees , a, dog]).
+sentenceDB(5,  [josh, likes, the, dog]).
+sentenceDB(6,  [the, dog, sees, the, josh]).
+sentenceDB(7,  [the, dog, likes, josh]).
+sentenceDB(8,  [the, dog, chases, josh]).
+sentenceDB(9,  [the, mouse, sees, the, dog]).
+sentenceDB(10, [the, dog, sees, the, mouse]).
+sentenceDB(11, [the, mouse, dislikes, a, dog]).
+sentenceDB(12, [the, dog, chases, the, mouse]).
+sentenceDB(13, [josh, chases, the, dog]).
+sentenceDB(14, [a, mouse, sees, a, josh]).
+sentenceDB(15, [the, mouse, dislikes, josh]).
+sentenceDB(16, [dog, sees, mouse]).
+sentenceDB(17, [dog, chases, mouse]).
+sentenceDB(18, [mouse, dislikes, dog]).
+sentenceDB(19, [the, dog, dislikes, a, mouse]).
+sentenceDB(20, [a, mouse, dislikes, the, a]).
+
+% Outputs the sentence choices as a list.
+showSentences :-
+    forall(sentenceDB(N, S),
+        (write(N), write(': '), write(S), nl)
+    ).
+
+
+
+
+% Main loop.
+
+% Starting output.
+main :-
+    nl,
+    write('   Rule Based AI Sentence Parser'), nl,
+    write('-----------------------------------'), nl,
+    loop.
+
+% Menu loop.
+loop :-
+    % Main menu output.
+    nl,
+    write('Available Sentences:'), nl,
+    showSentences,
+    write('0: Exit'), nl, nl,
+
+    write('Select a sentence (1-20) or 0 to quit. Put a . on the end. Ex = 1.'), nl,
+    % Getting choice. Will error if not ending with . or invalid input is used.
+    read(Choice),
+    
+    % ( Condition -> Then ; Else ) If-then-else referance.
+    (Choice = 0
+    ->  write('Have a great day!'), nl,
+        halt
+    ;   handleChoice(Choice),
+        loop
+    ).% End of choice.
+
+% Shows selected sentence. If parsed successful outputs tree otherwise error.
+handleChoice(Choice) :-
+    (sentenceDB(Choice, Sentence)
+    ->  nl,
+        write('Selected Sentence: '), write(Sentence), nl, nl,
+        (phrase(sentence(ParseTree), Sentence)
+        ->  write('Parse successful!'), nl, nl,
+            write('Parse Tree:'), nl,
+            printTree(ParseTree, '', true)
+        ;   write('Parse failed.'), nl
+        )
+    ;   write('Invalid selection. Try again.'), nl
+    ).% End of handle choice.
+
+
+
+
+
+/* Grammer rules
+ A sentence is a noun phrase followed by a verb phrase.
+ A noun phrase is a determiner followed by a noun.
+ A noun phrase can also just me a noun.
+ A verb_phrase is a verb followed by a noun phrase.
+*/
+
+sentence(sentence(NP, VP)) --> nounPhrase(NP), verbPhrase(VP).
+nounPhrase(noun(Det, N)) --> determiner(Det), noun(N).
+nounPhrase(noun(N)) --> noun(N).
+verbPhrase(verb(V, NP)) --> verb(V), nounPhrase(NP).
+
+determiner(det(the)) --> [the].
+determiner(det(a)) --> [a].
+noun(noun(josh)) --> [josh].
+noun(noun(dog)) --> [dog].
+noun(noun(mouse)) --> [mouse].
+verb(verb(chases)) --> [chases].
+verb(verb(sees)) --> [sees].
+verb(verb(likes)) --> [likes].
+verb(verb(dislikes)) -->[dislikes].
+
+
+
+
+/* ASCII tree printing
+Have to capitalize first leter to make a variable.
+Lots of comments as this was super annoying to do. 
+Most time out of entire program by far.
+Used many resources to get this annoying thing to work right.
+*/
+
+% Base case: Just prints word with current indention.
+printTree(Node, Prefix, IsLast) :-
+    atomic(Node), !,                                     % If Node is a word.
+    ( IsLast -> Branch = '|>> ' ; Branch = '|- ' ),      % Choose branch symbol.
+    write(Prefix), write(Branch), writeln(Node).         % Print with prefix.
+
+% Recursive case: Print with increasing indention by 3 spaces.
+printTree(Node, Prefix, IsLast) :-
+    Node =.. [Label | Children],                         % Breaks Node into Label and Children.
+    ( IsLast -> Branch = '|>> ' ; Branch = '|- ' ),      % Choose branch symbol.
+    write(Prefix), write(Branch), writeln(Label),        % Print current node.
+    
+    % Sets new prefix for children.
+    ( IsLast -> string_concat(Prefix, '   ', NewPrefix)  % Last child.
+              ; string_concat(Prefix, '|  ', NewPrefix)  % Not last.
+    ),
+    printChildren(Children, NewPrefix).                  % Print children recursively.
+
+% Print a list of children
+printChildren([], _).                                    % No children = done.
+printChildren([C], Prefix) :-                            % Last child.
+    printTree(C, Prefix, true).
+printChildren([C|Cs], Prefix) :-                         % Other children.
+    printTree(C, Prefix, false),
+    printChildren(Cs, Prefix).
