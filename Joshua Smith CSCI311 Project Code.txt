@@ -34,7 +34,7 @@ sentenceDB(12, [the, dog, chases, the, groundhog]).
 sentenceDB(13, [josh, chases, the, dog]).
 sentenceDB(14, [a, groundhog, sees, a, josh]).
 sentenceDB(15, [the, groundhog, dislikes, josh]).
-sentenceDB(16, [dog, sees, groundhog).
+sentenceDB(16, [dog, sees, groundhog]).
 sentenceDB(17, [dog, chases, groundhog]).
 sentenceDB(18, [groundhog, dislikes, dog]).
 sentenceDB(19, [the, dog, dislikes, a, groundhog]).
