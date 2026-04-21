@@ -19,26 +19,26 @@ I had different behavior from different compilers. Some would not compile at all
 % Sentences
 % Formated to make life easier. Number 20 is purposly invalid.
 
-sentenceDB(1,  [the, josh, sees, a, mouse]).
-sentenceDB(2,  [josh, dislikes, the, mouse]).
-sentenceDB(3,  [josh, chases, the, mouse]).
+sentenceDB(1,  [the, josh, sees, a, groundhog]).
+sentenceDB(2,  [josh, dislikes, the, groundhog]).
+sentenceDB(3,  [josh, chases, the, groundhog]).
 sentenceDB(4,  [josh, sees , a, dog]).
 sentenceDB(5,  [josh, likes, the, dog]).
 sentenceDB(6,  [the, dog, sees, the, josh]).
 sentenceDB(7,  [the, dog, likes, josh]).
 sentenceDB(8,  [the, dog, chases, josh]).
-sentenceDB(9,  [the, mouse, sees, the, dog]).
-sentenceDB(10, [the, dog, sees, the, mouse]).
-sentenceDB(11, [the, mouse, dislikes, a, dog]).
-sentenceDB(12, [the, dog, chases, the, mouse]).
+sentenceDB(9,  [the, groundhog, sees, the, dog]).
+sentenceDB(10, [the, dog, sees, the, groundhog]).
+sentenceDB(11, [the, groundhog, dislikes, a, dog]).
+sentenceDB(12, [the, dog, chases, the, groundhog]).
 sentenceDB(13, [josh, chases, the, dog]).
-sentenceDB(14, [a, mouse, sees, a, josh]).
-sentenceDB(15, [the, mouse, dislikes, josh]).
-sentenceDB(16, [dog, sees, mouse]).
-sentenceDB(17, [dog, chases, mouse]).
-sentenceDB(18, [mouse, dislikes, dog]).
-sentenceDB(19, [the, dog, dislikes, a, mouse]).
-sentenceDB(20, [a, mouse, dislikes, the, a]).
+sentenceDB(14, [a, groundhog, sees, a, josh]).
+sentenceDB(15, [the, groundhog, dislikes, josh]).
+sentenceDB(16, [dog, sees, groundhog).
+sentenceDB(17, [dog, chases, groundhog]).
+sentenceDB(18, [groundhog, dislikes, dog]).
+sentenceDB(19, [the, dog, dislikes, a, groundhog]).
+sentenceDB(20, [a, groundhog, dislikes, the, a]).
 
 % Outputs the sentence choices as a list.
 showSentences :-
@@ -112,7 +112,7 @@ determiner(det(the)) --> [the].
 determiner(det(a)) --> [a].
 noun(noun(josh)) --> [josh].
 noun(noun(dog)) --> [dog].
-noun(noun(mouse)) --> [mouse].
+noun(noun(groundhog)) --> [groundhog].
 verb(verb(chases)) --> [chases].
 verb(verb(sees)) --> [sees].
 verb(verb(likes)) --> [likes].
